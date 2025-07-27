@@ -312,7 +312,7 @@ function update() {
 		}
 	}
 
-	if (FlxG.keys.justPressed.TAB) {
+	if (FlxG.keys.justPressed.TAB && !disableInput) {
 		FlxG.sound.play(Paths.sound('menu/confirm'));
 		dj.playAnim("exit", true);
 			

@@ -1,8 +1,19 @@
 {
-	"displayName": "Roses",
-	"bpm": 120.0,
+	"opponentModeAllowed": true,
 	"icon": "senpai",
-	"color": "#FF78BF",
+	"difficulties": [
+		"easy",
+		"normal",
+		"hard",
+		"erect",
+		"nightmare"
+	],
+	"color": -34625,
 	"coopAllowed": true,
-	"opponentModeAllowed": true
+	"name": "roses",
+	"stepsPerBeat": 4,
+	"displayName": "Roses",
+	"beatsPerMeasure": 4,
+	"needsVoices": true,
+	"bpm": 120
 }
