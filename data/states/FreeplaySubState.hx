@@ -59,12 +59,16 @@ var ogList;
 var songTimerDuration = 50;
 var songTimer = -1;
 
+var albumArt;
+
 static var yoSelected = 0;
+static var yoDifficulty = 0;
 
 function create():Void {
 	CoolUtil.playMenuSong();
 
 	curSelected = yoSelected;
+	curDifficulty = yoDifficulty;
 
 	menuData = CoolUtil.parseJson("data/config/freeplayCharacters/" + currentCharacter + ".json");
 	var finalList = [];
@@ -120,6 +124,7 @@ function create():Void {
 	for (i=>chartMeta in songMetas) {
 		//trace(chartMeta);
 		var capsule:Capsule = new Capsule(0, 120 * i, chartMeta, menuData.capsule);
+		capsule.extra.set("defaultLabel", i.name);
 
 		var bpmArr = [];
 		for (i in (chartMeta.bpm + "").split("")) {
@@ -233,9 +238,20 @@ function create():Void {
 	dj.playAnim('intro', true);
 
 	playSelectedSong();
+	
+	albumArt = new FunkinSprite(990, 280);
+	albumArt.antialiasing = true;
+	albumArt.updateHitbox();
+	albumArt.x += 400;
+	albumArt.angle = 40;
+	FlxTween.tween(albumArt, { x: albumArt.x - 435, angle: 10 }, 0.4, { ease: FlxEase.backOut, startDelay: 0.2 });
+	//loadAlbum("volume1");
+	add(albumArt);
 
-	curDifficulty = 0;
+	curDifficulty--;
 	changeDifficulty(1);
+	/* curDifficulty = 0;
+	changeDifficulty(1); */
 }
 
 var previousDiff = 0;
@@ -279,6 +295,7 @@ function update() {
 		FlxTween.tween(leftArrow, { y: -leftArrow.height }, 0.3, { ease: FlxEase.backIn, startDelay: 0.1 });
 		FlxTween.tween(diffGroup, { y: -diffGroup.members[0].height }, 0.3, { ease: FlxEase.backIn, startDelay: 0.2 });
 		FlxTween.tween(dj, { y: 600 }, 0.5, { ease: FlxEase.backIn, onComplete: close, startDelay: currentCharacter == "pico" ? 1 : 0.5 });
+		FlxTween.tween(albumArt, { x: albumArt.x + 435, angle: 40 }, 0.4, { ease: FlxEase.backIn });
 
 		dj.playAnim("exit", true);
 		//dj.playAnim("dj freeplay", true, 'none', false, 708);
@@ -326,6 +343,9 @@ function update() {
 	}
 
 	yoSelected = curSelected;
+	yoDifficulty = curDifficulty;
+
+	albumArt.y = lerp(albumArt.y, 280, 0.1);
 }
 
 var playingSong = "";
@@ -396,6 +416,8 @@ function changeSelection(?amount:Int, ?skip:Bool):Void {
 		songTimer = songTimerDuration;
         FlxG.sound.play(Paths.sound('menu/scroll'));
     }
+
+	reloadAlbum();
 }
 
 function checkSongHasDifficulty(songMeta, difficulty:String) {
@@ -433,6 +455,16 @@ function changeDifficulty(?amount:Int) {
 	add(songs);
 	changeSelection(0, false);
 	songTimer = songTimerDuration;
+
+	for (i in 0...songs.length) {
+		var capsuleText = songs.members[i].songText;
+		if (songMetas[i].name != "random") {
+			capsuleText.text = songMetas[i].displayName + (difficulties[curDifficulty] == "erect" || difficulties[curDifficulty] == "nightmare" ? " Erect" : "");
+		}
+		songs.members[i].initSongText(capsuleText);
+	}
+
+	reloadAlbum();
 	//playSelectedSong();
 }
 
@@ -441,6 +473,7 @@ function selectSong(pressedEnter:Bool) {
 	songTimer = 10000;
 	if (songMetas[curSelected].name == "random") {
 		changeSelection(FlxG.random.int(1, songMetas.length-1));
+		selectSong(true);
 		return;
 	}
 	if (!checkSongHasDifficulty(songMetas[curSelected], difficulties[curDifficulty])) {
@@ -477,4 +510,17 @@ function beatHit() {
 			bop();
 		}
 	}
+}
+
+var previousAlbum = "";
+function loadAlbum(id:String) {
+	if (previousAlbum == id) return;
+	previousAlbum = id;
+	albumArt.loadGraphic(Paths.image("menus/freeplay/album/" + id));
+	albumArt.y += 10;
+}
+
+
+function reloadAlbum() {
+	loadAlbum(songMetas[curSelected]?.customValues?.album ?? "placeholder");
 }

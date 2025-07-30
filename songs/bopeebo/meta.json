@@ -4,5 +4,9 @@
 	"icon": "dad",
 	"color": "#9271FD",
 	"coopAllowed": true,
-	"opponentModeAllowed": true
+	"opponentModeAllowed": true,
+	"customValues": {
+		"album": "volume1",
+		"albumErect": "volumeFuck"
+	}
 }

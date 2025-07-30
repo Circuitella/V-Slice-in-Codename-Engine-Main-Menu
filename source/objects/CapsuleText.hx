@@ -1,5 +1,6 @@
 import funkin.backend.MusicBeatGroup;
 import openfl.filters.GlowFilter;
+import flixel.math.FlxRect;
 
 class CapsuleText extends MusicBeatGroup {
 	public var blurredText:FlxText;
@@ -68,7 +69,7 @@ class CapsuleText extends MusicBeatGroup {
 		}
 	}
 
-	private function set_text(value:String):String {
+	public function set_text(value:String):String {
 		if (value == null)
 			return text;
 

@@ -3,6 +3,9 @@ import funkin.backend.MusicBeatGroup;
 class Capsule extends MusicBeatGroup {
 	public var realScaled:Float = 0.8;
 
+	public var extra = [
+		"init" => null
+	];
 	public var songText:MusicBeatGroup;
 
 	public var self:FunkinSprite;
@@ -108,6 +111,8 @@ class Capsule extends MusicBeatGroup {
 		return this;
 	}
 	public function initSongText(text:MusicBeatGroup):Capsule {
+		if (members.contains(songText))
+			remove(songText);
 		songText = text;
 		insert(members.indexOf(icon), text);
 		return this;
