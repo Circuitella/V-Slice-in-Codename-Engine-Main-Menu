@@ -18,8 +18,7 @@ function postCreate() {
       var menuItem = menuItems.members[i];
       menuItem.x = FlxG.width / 2;
       menuItem.y = top + spacing * i;
-      menuItem.scrollFactor.x = #if !mobile 0.0 #else 0.4 #end; // we want a lil scroll on mobile, for the cute gyro effect
-      // This one affects how much the menu items move when you scroll between them.
+      menuItem.scrollFactor.x = 0.4 ;
       menuItem.scrollFactor.y = 0.4;
 
       if (i == 1)
